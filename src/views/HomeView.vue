@@ -65,12 +65,12 @@ const updateTask = ()=> {
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
       <div v-for="(item, i) in tasks" :key="i" class="px-2 min-h-24 flex flex-col justify-between rounded-md" :style="{backgroundColor : item.backgroundColor}">
-        <div v-if="!isEditing || selectedTask !== i" class=" bg-red-300 w-full">
+        <div v-if="!isEditing || selectedTask !== i" class="  w-full">
           <span>
             {{ item.text }}
           </span>
         </div>
-        <div v-else class=" bg-red-300 w-full">
+        <div v-else class="  w-full">
           <span>
             <input v-model="task" @keyup.enter="updateTask" type="text" placeholder="edit task">
           </span>
