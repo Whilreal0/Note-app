@@ -69,7 +69,7 @@ const openModal = () => {
   <div class="container px-2 ">
     <div class="flex justify-between items-center mb-5 py-2 px-2">
       <span>Note</span>
-      <button class="bg-red-300 rounded-full w-6 aspect-square relative" @click="openModal"><span class="">+</span></button>
+      <button class="bg-red-300 rounded-full w-8 aspect-square relative" @click="openModal"><span class="">+</span></button>
     </div>
     <div  v-if="showModal" class="absolute inset-0   z-10 px-2 py-5 flex items-center justify-center">
       <div class="bg-blue-300 rounded-md min-w-72 px-2 py-2 my-auto z-10">
