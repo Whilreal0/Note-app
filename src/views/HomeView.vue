@@ -1,10 +1,13 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-
+import { useDark, useToggle } from "@vueuse/core";
 const showModal = ref(false);
 const task = ref(""); //newNote
 const isEditing = ref(false);
 const selectedTask = ref(null);
+
+const isDark = useDark();
+const toggleDark = useToggle(isDark);
 
 const randomColor = () => {
   return "hsl(" + Math.random() * 360 + ", 100%, 75%)";
@@ -13,11 +16,9 @@ const randomColor = () => {
 // load task from localstorage
 const loadTasks = () => {
   const storedTasks = localStorage.getItem("tasks");
-  return storedTasks
-    ? JSON.parse(storedTasks)
-    : []
-}
-const tasks = reactive(loadTasks()) // Initialize task from localstorage
+  return storedTasks ? JSON.parse(storedTasks) : [];
+};
+const tasks = reactive(loadTasks()); // Initialize task from localstorage
 // Save tasks to local storage
 // Add default tasks only if local storage is empty
 if (tasks.length === 0) {
@@ -35,22 +36,9 @@ if (tasks.length === 0) {
   );
 }
 
-
 const saveTasks = () => {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 };
-// const tasks = reactive([
-//   {
-//     text: "Note Sample",
-//     date: new Date().toLocaleDateString(),
-//     backgroundColor: randomColor(),
-//   },
-//   {
-//     text: "Note Sample 2",
-//     date: new Date().toLocaleDateString(),
-//     backgroundColor: randomColor(),
-//   },
-// ]); 
 
 const addTask = () => {
   if (task.value.trim() === "") return;
@@ -86,41 +74,61 @@ const updateTask = () => {
 };
 const openModal = () => {
   // Reset editing state when opening the modal
+  let body = document.body;
+
   isEditing.value = false;
   selectedTask.value = null;
   task.value = ""; // Clear the input for new task
-  showModal.value = true; // Open the modal
+  // showModal.value = true; // Open the modal
+  showModal.value = !showModal.value;
+  showModal.value
+    ? body.classList.add("overflow-hidden")
+    : body.classList.remove("overflow-hidden");
 };
+
+onMounted(() => {
+  isDark.value = true; // Force dark mode to be active on page load
+});
+const toggle = () => {
+  isDark.value =! isDark.value
+
+}
 </script>
 
 <template>
-  <div class="container px-2">
-    <div class="flex justify-between items-center mb-5 py-2 px-2">
-      <span>Note</span>
+  <div class="container px-2" 
+  >
+    <div class="flex justify-between items-center mb-1.5 py-2 dark:text-[#c9a5fa] text-black">
+      <span > 
+        <button @click="toggle" class="">Quick Notes</button>
+      </span>
       <button
-        class="bg-red-300 rounded-full w-8 aspect-square relative"
+        class="w-8 h-8 flex items-center justify-center text-2xl font-bold"
         @click="openModal"
       >
-        <span class="">+</span>
+        +
       </button>
     </div>
     <div
       v-if="showModal"
       class="absolute inset-0 z-10 px-2 py-5 flex items-center justify-center"
     >
-      <div class="bg-blue-300 rounded-md min-w-72 px-2 py-2 my-auto z-10">
+      <div class="bg-[#3f3f3f] dark:bg-[#121212]  rounded-md min-w-72 px-2 py-2 my-auto z-10">
         <form @submit.prevent="addTask" class="flex flex-col">
           <!-- <input class="rounded-md" v-model="task"  @keyup.enter="addTask" type="text" /> -->
           <textarea
             rows="4"
             class="rounded-md px-1 w-full"
             v-model="task"
+            @keyup.enter="addTask"
           ></textarea>
           <button class="sm-submit-btn mt-2" type="submit">Submit</button>
         </form>
-        <button class="sm-danger-btn w-full mt-2" @click="showModal = false">close</button>
+        <!-- <button class="sm-danger-btn w-full mt-2" @click="openModal">
+          Close
+        </button> -->
       </div>
-      <div @click="showModal = false" class="absolute bg-black/80 inset-0">
+      <div @click="openModal" class="absolute bg-black/80 inset-0">
         <!-- click bg to close -->
       </div>
     </div>
@@ -128,17 +136,16 @@ const openModal = () => {
       <div
         v-for="(item, i) in tasks"
         :key="i"
-        class="p-2 min-h-24 flex flex-col justify-between rounded-md"
+        class="p-2 min-h-24 flex flex-col justify-between rounded-md w-full"
         :style="{ backgroundColor: item.backgroundColor }"
       >
-        <div v-if="!isEditing || selectedTask !== i" class="w-full">
-          <span class="w-full">
+        <div v-if="!isEditing || selectedTask !== i" class="w-full mb-10">
+          <span class="break-words">
             {{ item.text }}
           </span>
         </div>
         <div v-if="isEditing && selectedTask === i" class="w-full">
           <span>
-            <!-- <input class="rounded-md px-1 w-full" v-model="task" @keyup.enter="updateTask" type="text" placeholder="edit task"> -->
             <textarea
               class="rounded-md px-1 w-full"
               v-model="task"
@@ -147,20 +154,22 @@ const openModal = () => {
             ></textarea>
           </span>
         </div>
-        <div class="flex justify-between">
-          <div class="flex gap-2">
+        <div class="flex justify-between items-center">
+          <div class="flex gap-2 justify-center items-center">
             <button
               v-if="!isEditing || selectedTask !== i"
               @click="editTask(i)"
             >
-              Edit
+              <box-icon name="pencil" size="sm"></box-icon>
             </button>
             <button v-if="isEditing && selectedTask === i" @click="updateTask">
               Update
             </button>
-            <button @click="deleteTask(i)">delete</button>
+            <button class="" @click="deleteTask(i)" c>
+              <box-icon name="trash" size="sm"></box-icon>
+            </button>
           </div>
-          <div>{{ item.date }}</div>
+          <div class="text-sm">{{ item.date }}</div>
         </div>
       </div>
     </div>
