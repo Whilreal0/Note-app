@@ -100,7 +100,7 @@ const toggle = () => {
 </script>
 
 <template>
-  <div class=" p-2 h-full" 
+  <div class=" p-2 min-h-screen h-full" 
   >
     <div class="flex justify-between items-center mb-1.5 py-2 dark:text-[#c9a5fa] text-black">
       <span > 
@@ -155,6 +155,7 @@ const toggle = () => {
               v-model="task"
               @keyup.enter="updateTask"
               placeholder="edit task"
+              rows="5"
             ></textarea>
           </span>
         </div>
@@ -164,10 +165,10 @@ const toggle = () => {
               v-if="!isEditing || selectedTask !== i"
               @click="editTask(i)"
             >
-              <box-icon name="pencil" size="sm"></box-icon>
+              <box-icon name="pencil" size="sm" color="green"></box-icon>
             </button>
             <button v-if="isEditing && selectedTask === i" @click="updateTask">
-              <box-icon name='save' ></box-icon>
+              <box-icon name='save' size="sm" color="green" ></box-icon>
             </button>
             <button class="" @click="deleteTask(i)" c>
               <box-icon name="trash" size="sm" color="red"></box-icon>
