@@ -41,6 +41,7 @@ const saveTasks = () => {
 };
 
 const addTask = () => {
+  let body = document.body;
   if (task.value.trim() === "") return;
   tasks.unshift({
     text: task.value, // Use task.value for the text
@@ -50,6 +51,9 @@ const addTask = () => {
   saveTasks();
   task.value = ""; // Clear the input field
   showModal.value = false; // Close the modal after adding the task
+  showModal.value
+    ? body.classList.add("overflow-hidden")
+    : body.classList.remove("overflow-hidden");
 };
 const deleteTask = (i) => {
   tasks.splice(i, 1); // Remove the task at the specified index
@@ -96,7 +100,7 @@ const toggle = () => {
 </script>
 
 <template>
-  <div class="container p-2" 
+  <div class=" p-2 h-full" 
   >
     <div class="flex justify-between items-center mb-1.5 py-2 dark:text-[#c9a5fa] text-black">
       <span > 
@@ -132,7 +136,7 @@ const toggle = () => {
         <!-- click bg to close -->
       </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 ">
       <div
         v-for="(item, i) in tasks"
         :key="i"
@@ -163,10 +167,10 @@ const toggle = () => {
               <box-icon name="pencil" size="sm"></box-icon>
             </button>
             <button v-if="isEditing && selectedTask === i" @click="updateTask">
-              Update
+              <box-icon name='save' ></box-icon>
             </button>
             <button class="" @click="deleteTask(i)" c>
-              <box-icon name="trash" size="sm"></box-icon>
+              <box-icon name="trash" size="sm" color="red"></box-icon>
             </button>
           </div>
           <div class="text-sm">{{ item.date }}</div>

@@ -5,7 +5,7 @@ import { ref, reactive } from "vue";
 
 <template>
   <div 
-    class="md:mx-[8rem] lg:mx-[15rem] xl:mx-[25rem] dark:bg-[#282828] bg-white  h-full shadow-lg"
+    class="md:mx-[8rem] lg:mx-[15rem] xl:mx-[25rem] dark:bg-[#282828] bg-white shadow-lg"
     
   >
 
